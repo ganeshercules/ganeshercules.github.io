@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>సైబర్ భద్రత అవగాహన డెమో - కెమెరా</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        video, canvas {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h3>సైబర్ భద్రత అవగాహన డెమో</h3>
+    <p>ఈ డెమో మీ మొబైల్ ఫోన్‌లోని ఫ్రంట్ కెమెరాను యాక్సెస్ చేసి ఒక ఫోటో తీస్తుంది. దయచేసి కెమెరా అనుమతి ఇవ్వండి. ఈ ఫోటో ఎక్కడా సేవ్ చేయబడదు.</p>
+
+    <button onclick="startCamera()"> ఇక్కడ నొక్కండి</button>
+    <video id="video" autoplay playsinline></video>
+    <button onclick="takePhoto()" style="display: none;" id="captureBtn">ఇక్కడ నొక్కండి</button>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <div id="output"></div>
+
+    <script>
+        let stream = null;
+
+        async function startCamera() {
+            try {
+                // ఫ్రంట్ కెమెరాను యాక్సెస్ చేయడం (facingMode: user)
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user" } // ఫ్రంట్ కెమెరా
+                });
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                document.getElementById('captureBtn').style.display = 'block';
+                document.getElementById('output').innerHTML = `
+                    <p>మీ కెమెరా ఆన్ చేయబడింది! దయచేసి "ఇక్కడ నొక్కండి" బటన్‌ను క్లిక్ చేయండి.</p>
+                `;
+            } catch (error) {
+                document.getElementById('output').innerHTML = `
+                    <p style="color: red;">కెమెరా యాక్సెస్ నిరాకరించబడింది లేదా లోపం: ${error.message}</p>
+                `;
+            }
+        }
+
+        function takePhoto() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const output = document.getElementById('output');
+            const context = canvas.getContext('2d');
+
+            // కాన్వాస్‌ను వీడియో సైజ్‌కు సెట్ చేయడం
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // వీడియో నుండి ఫోటో తీయడం
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.style.display = 'block';
+
+            // కెమెరా స్ట్రీమ్‌ను ఆపడం
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            video.style.display = 'none';
+            document.getElementById('captureBtn').style.display = 'none';
+
+            // అవగాహన సందేశం
+            output.innerHTML = `
+                <h4>మీ ఫోటో తీయబడింది!</h4>
+                <p style="color: red;">సైబర్ నేరస్థులు ఇలాంటి లింక్‌ల ద్వారా మీ కెమెరాను యాక్సెస్ చేసి ఫోటోలు తీయవచ్చు. ఈ డెమోలో ఫోటో ఎక్కడా సేవ్ చేయబడలేదు, కానీ తెలియని లింక్‌లను క్లిక్ చేయడం లేదా కెమెరా అనుమతులు ఇవ్వడం జాగ్రత్తగా చేయండి!</p>
+                <p>సలహా: 
+                    <ul>
+                        <li>తెలియని లింక్‌లను క్లిక్ చేయవద్దు.</li>
+                        <li>HTTPS వెబ్‌సైట్‌లను మాత్రమే నమ్మండి.</li>
+                        <li>కెమెరా/మైక్రోఫోన్ అనుమతులు ఇవ్వడానికి ముందు జాగ్రత్త వహించండి.</li>
+                        <li>మీ ఫోన్‌ను ఎల్లప్పుడూ అప్‌డేట్‌గా ఉంచండి.</li>
+                    </ul>
+               `;
+
+            // ఫోటోను డౌన్‌లోడ్ చేయడానికి లింక్ (ఐచ్ఛికం, డెమో కోసం తొలగించవచ్చు)
+            // const photoUrl = canvas.toDataURL('image/png');
+            // const link = document.createElement('a');
+            // link.href = photoUrl;
+            // link.download = 'demo_photo.png';
+            // link.innerText = 'ఫోటోను డౌన్‌లోడ్ చేయండి';
+            // output.appendChild(link);
+        }
+    </script>
+</body>
+</html>
