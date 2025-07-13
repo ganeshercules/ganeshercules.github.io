@@ -39,9 +39,9 @@
     <h3>సైబర్ భద్రత అవగాహన డెమో</h3>
     <p>ఈ డెమో మీ మొబైల్ ఫోన్‌లోని ఫ్రంట్ కెమెరాను యాక్సెస్ చేసి ఒక ఫోటో తీస్తుంది. దయచేసి కెమెరా అనుమతి ఇవ్వండి. ఈ ఫోటో ఎక్కడా సేవ్ చేయబడదు.</p>
 
-    <button onclick="startCamera()"> ఇక్కడ నొక్కండి</button>
+    <button onclick="startCamera()">కెమెరాను ఆన్ చేయండి</button>
     <video id="video" autoplay playsinline></video>
-    <button onclick="takePhoto()" style="display: none;" id="captureBtn">ఇక్కడ నొక్కండి</button>
+    <button onclick="takePhoto()" style="display: none;" id="captureBtn">ఫోటో తీయండి</button>
     <canvas id="canvas" style="display: none;"></canvas>
     <div id="output"></div>
 
@@ -58,7 +58,7 @@
                 video.srcObject = stream;
                 document.getElementById('captureBtn').style.display = 'block';
                 document.getElementById('output').innerHTML = `
-                    <p>మీ కెమెరా ఆన్ చేయబడింది! దయచేసి "ఇక్కడ నొక్కండి" బటన్‌ను క్లిక్ చేయండి.</p>
+                    <p>మీ కెమెరా ఆన్ చేయబడింది! దయచేసి "ఫోటో తీయండి" బటన్‌ను క్లిక్ చేయండి.</p>
                 `;
             } catch (error) {
                 document.getElementById('output').innerHTML = `
